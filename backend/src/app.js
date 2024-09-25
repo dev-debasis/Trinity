@@ -22,7 +22,7 @@ app.use(express.urlencoded({
 
 app.use(express.static("public"))
 
-import userRouter from "./routes/user.router.js"
+import userRouter from "./routes/user.route.js"
 
 
 // Declaring the Router

@@ -4,7 +4,6 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.util.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
-import mongoose from "mongoose";
 
 const registerUser = asyncHandler(async (req, res) => {
   /*
@@ -40,7 +39,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // Check for the images as per data model
-  const avatarLocalPath = req.files?.avatar[0]?.path;
+  const avatarLocalPath = req.file?.path;
   
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required");
@@ -111,6 +110,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // find the user
+
 
   const user = await User.findOne({
     $or: [{ username }, { email }],
@@ -245,7 +245,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid Old password")
   }
   user.password = newPassword
-  await User.save({validateBeforeSave: false})
+  await user.save({validateBeforeSave: false})
 
   return res
   .status(200)
@@ -263,7 +263,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
-  const {fullName, email} = req.body
+  const { fullName, email } = req.body
   if(!fullName || !email){
     throw new ApiError(400, "Both field are required")
   }
@@ -303,7 +303,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
  const user = await User.findByIdAndUpdate(
     req.user?._id, 
     {
-      $set: [{avatar: avatar.url}]
+      $set: {avatar: avatar.url}
     },
     {
       new: true
