@@ -1,7 +1,8 @@
-import Router from 'express';
-const router = Router();
-import { captureScreenshot } from "../controllers/screenshot.controller.js"
+import express from "express";
+import { captureScreenshot } from "../controllers/screenshot.controller.js";
 
-router.post('/capture', captureScreenshot);
+const router = express.Router();
 
-module.exports = router;
+router.post("/", captureScreenshot);
+
+export default router;

@@ -1,9 +1,8 @@
-import Router from "express";
-import { generateRandomUsers } from '../controllers/randomUser.controller';
+import express from "express";
+import { generatePdfWithQr } from "../controllers/pdfGenerator.controller.js";
 
-const router = Router();
+const router = express.Router();
 
-// POST route to generate a PDF with QR code from input data
-router.post('/generate-pdf', generatePDFWithQRCode);
+router.post("/", generatePdfWithQr);
 
-module.exports = router;
+export default router;

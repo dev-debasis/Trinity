@@ -1,9 +1,8 @@
-import Router from "express";
-import { generateRandomUsers } from '../controllers/randomUser.controller';
+import express from "express";
+import { generateUserData } from "../controllers/randomUser.controller.js";
 
-const router = Router();
+const router = express.Router();
 
-// POST route to generate random user data and save it in CSV
-router.post('/generate-data', generateRandomUsers);
+router.post("/", generateUserData); 
 
-module.exports = router;
+export default router;
