@@ -1,0 +1,18 @@
+{
+  "name": "devinnov8",
+  "version": "1.0.0",
+  "description": "This is a full-stack web application that allows users to perform three core functionalities:\r 1. **Take Website Screenshots**: Enter a URL and capture a screenshot of the website.\r 2. **Generate Random User Data**: Dynamically generate random user profiles based on input count.\r 3. **Generate PDF with QR Code**: Enter any data and generate a PDF file containing a QR code.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+  },
+  "author": "Debasis Khamari",
+  "license": "MIT",
+  "dependencies": {
+    "codemon": "^0.1.31-development",
+    "express": "^4.21.0",
+    "mongoose": "^8.6.3",
+    "qrcode": "^1.5.4"
+  }
+}
