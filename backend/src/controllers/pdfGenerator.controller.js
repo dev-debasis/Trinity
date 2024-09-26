@@ -69,15 +69,19 @@ export const generatePdfWithQr = async (req, res) => {
             fs.unlinkSync(qrPath); // Delete the temporary QR code
         });
 
-        res
-        .download("/DevInnov8/backend/public/", 'output.pdf', (err) => {
+        // Send the PDF file as a download
+        res.download(pdfPath, 'output.pdf', (err) => {
             if (err) {
-                res.status(500).json({ message: "Failed to download PDF", error: err.message });
+                console.error("Failed to download PDF:", err);
+                return res.status(500).json({ message: "Failed to download PDF", error: err.message });
             }
-        })
-        .status(200)
-        .json({ message: "PDF with QR code generated successfully", path: pdfPath });
+
+            // Optionally, you can also delete the PDF file after download
+            fs.unlinkSync(pdfPath);
+        });
+
     } catch (err) {
+        console.error("Error generating PDF:", err);
         res.status(500).json({ message: "Failed to generate PDF", error: err.message });
     }
 };
