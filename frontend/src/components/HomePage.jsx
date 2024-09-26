@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Banner } from './Banner'
 import bgImg from '../assets/images/banner-bg.png'
 
 const HomePage = () => {
+
   let navigate = useNavigate(); 
   const screenShot = () =>{ 
     let path = `/screenshot`; 
@@ -18,6 +19,10 @@ const HomePage = () => {
     let path = `/generate-pdf`; 
     navigate(path);
   }
+
+ 
+  
+
   return (
     <div className=''>
       <div className='relative border bg-[#0C162D] border-[#202637d9] w-full h-[360px] mt-20 overflow-hidden rounded-xl'>

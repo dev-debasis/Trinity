@@ -2,6 +2,23 @@ import React, { useState } from 'react'
 import Navbar from './Navbar';
 const PDFgenerator = () => {
   const [data, setdata] = useState("")
+
+  const handleSubmit = async () => {
+    const res = await fetch("http://localhost:5000/api/v1/generate-pdf", {
+      method: "post",
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    
+      body: JSON.stringify({
+        "data": data
+      })
+  });
+
+  console.log(res)
+  
+  }
   return (
     <div>
       <Navbar />
@@ -21,7 +38,7 @@ const PDFgenerator = () => {
             </textarea>
             </div>
             
-            <button className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
+            <button onClick={handleSubmit} className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
               Generate PDF
             </button>
           </div>

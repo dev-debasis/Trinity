@@ -10,7 +10,23 @@ const ScreenShotTaker = () => {
   const toggleSwitch = () => {
     setIsFullSize(!isFullSize);
   };
+  
+  const handleSubmit = async () => {
+    const res = await fetch("http://localhost:5000/api/v1/screenshot/", {
+      method: "post",
+      credentials: "include",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    
+      body: JSON.stringify({
+        "url": inputUrl
+      })
 
+    });
+    console.log(res)
+  }
   
   return (
     <div>
@@ -99,7 +115,7 @@ const ScreenShotTaker = () => {
               </div>
             </div>
 
-            <button className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
+            <button onClick={handleSubmit} className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
               Capture screenshot
             </button>
           </div>

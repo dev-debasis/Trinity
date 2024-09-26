@@ -1,7 +1,49 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import * as Components from './styles.js';
 const SignUp = () => {
     const [signIn, toggle] = React.useState(true);
+    const [Name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const onNameChane = (e) => {
+        setName(e.target.value)
+    }
+    const onEmailChange = (e) => {
+        setEmail(e.target.value)
+    }
+    const onPasswordChange = (e) => {
+        setPassword(e.target.value)
+    }
+    
+    // useEffect( async() => {
+    //   const user = await fetch("/api/v1/users/current-user");
+    // //   console.log(user)
+    
+    // }, [])
+
+    const handleSingup = async () => {
+        const res = await fetch("")
+    }
+
+    const handleLongin = async () => {
+        const res = await fetch("/api/v1/users/login", {
+            method: "post",
+            credentials: true,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+          
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+        });
+        const response = await res.json()
+        console.log(response);
+    }
+    
     return(
         <div className='h-screen w-screen flex justify-center items-center bg-gradient-to-r from-[#041330] via-[#040D21] to-[#081a36] font-["Nunito Sans"]'>
 
@@ -9,11 +51,11 @@ const SignUp = () => {
             <Components.SignUpContainer signinIn={signIn}>
                 <Components.Form>
                     <Components.Title>Create Account</Components.Title>
-                    <Components.Input type='text' placeholder='Name' />
-                    <Components.Input type='email' placeholder='Email' />
-                    <Components.Input type='password' placeholder='Password' />
+                    <Components.Input onChange={onNameChane} type='text' placeholder='Name' />
+                    <Components.Input onChange={onEmailChange} type='email' placeholder='Email' />
+                    <Components.Input onChange={onPasswordChange} type='password' placeholder='Password' />
                     <Components.FileInput type='file' placeholder='Password' />
-                    <Components.Button>Sign Up</Components.Button>
+                    <Components.Button onChange={handleSingup}>Sign Up</Components.Button>
                 </Components.Form>
             </Components.SignUpContainer>
 
@@ -21,10 +63,10 @@ const SignUp = () => {
             <Components.SignInContainer signinIn={signIn}>
                  <Components.Form>
                      <Components.Title>Sign in</Components.Title>
-                     <Components.Input type='email' placeholder='Email' />
-                     <Components.Input type='password' placeholder='Password' />
+                     <Components.Input onChange={onEmailChange} type='email' placeholder='Email' />
+                     <Components.Input onChange={onPasswordChange} type='password' placeholder='Password' />
                      <Components.Anchor href='#'>Forgot your password?</Components.Anchor>
-                     <Components.Button>Sigin In</Components.Button>
+                     <Components.Button onChange={handleLongin}>Sign In</Components.Button>
                  </Components.Form>
             </Components.SignInContainer>
 
