@@ -1,4 +1,10 @@
 import puppeteer from 'puppeteer';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export const captureScreenshot = async (req, res) => {
     const { url } = req.body;
@@ -7,16 +13,47 @@ export const captureScreenshot = async (req, res) => {
         return res.status(400).json({ error: "URL is required" });
     }
 
+    let browser;
     try {
-        const browser = await puppeteer.launch();
+        browser = await puppeteer.launch({
+            headless: true,
+        });
         const page = await browser.newPage();
-        await page.goto(url);
+        await page.setViewport({
+            width: 1280,
+            height: 800
+        });
+        await page.goto(url, {
+            waitUntil: 'networkidle2',
+            timeout: 60000
+        });
 
-        const screenshot = await page.screenshot({ encoding: 'base64' });
-        await browser.close();
+        const screenshotsDir = join(__dirname, 'screenshots');
+        // Create the screenshots directory if it doesn't exist
+        if (!fs.existsSync(screenshotsDir)) {
+            fs.mkdirSync(screenshotsDir);
+        }
 
-        res.status(200).json({ screenshot });
+        const imagePath = join(screenshotsDir, `${Date.now()}.png`);
+
+        await page.screenshot({
+            path: imagePath,
+            fullPage: true
+        });
+
+        console.log(`Screenshot saved at: ${imagePath}`);
+
+        res.status(200).json({
+            message: "Screenshot captured successfully",
+            imagePath // Returning the path of the saved screenshot
+        });
+
     } catch (error) {
-        res.status(500).json({ error: "Failed to capture screenshot" });
+        console.error("Error capturing screenshot: ", error);
+        res.status(500).json({ error: "Failed to capture screenshot", details: error.message });
+    } finally {
+        if (browser) {
+            await browser.close(); // Ensure browser closes even if an error occurs
+        }
     }
 };
