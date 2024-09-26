@@ -1,5 +1,7 @@
 # **Combined Web App: Screenshot, Random User Data, QR Code PDF with User Profile & Authorization**
 
+![image alt](https://github.com/dev-debasis/DevInnov8/blob/11047f6269625bbab54fd56b053edf5327e96f4f/DevInnov8_WebApp_Banner.jpg)
+
 ## **Overview**
 This is a full-stack web application that allows users to perform three core functionalities:
 1. **Take Website Screenshots**: Enter a URL and capture a screenshot of the website.
