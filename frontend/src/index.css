@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@keyframes floating {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+
+@layer utilities {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+   /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    .card-wrapper {
+      @apply relative overflow-hidden rounded-sm bg-gradient-to-b from-slate-700 to-slate-800;
+    }
+    
+    .card-wrapper::before {
+      background: conic-gradient(
+  rgba(0, 102, 255, 0.8) 0deg,
+  rgba(51, 153, 255, 0.8) 45deg,
+  rgba(102, 204, 255, 0.8) 90deg,
+  rgba(153, 204, 255, 0.8) 135deg,
+  rgba(204, 229, 255, 0.8) 180deg,
+  rgba(102, 178, 255, 0.8) 225deg,
+  rgba(0, 128, 255, 0.8) 270deg,
+  rgba(51, 153, 255, 0.8) 315deg
+
+      );
+      
+      box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+    
+      @apply absolute left-[-25%] top-[-25%] h-[150%] w-[150%] animate-border-spin content-[''];
+    }
+    
+    .card-content {
+      @apply absolute left-[1px] top-[1px] h-[calc(100%-2px)] w-[calc(100%-2px)] rounded-sm bg-[#0C162D];
+    };
+    
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      @apply appearance-none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type="number"] {
+      @apply appearance-none;
+      -moz-appearance: textfield;
+    }
+    
+    .animate-floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+}
+
+  
