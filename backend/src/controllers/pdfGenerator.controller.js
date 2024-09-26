@@ -1,56 +1,11 @@
-// import fs from "fs";
-// import path from "path";
-// import { fileURLToPath } from "url";
-// import PDFDocument from "pdfkit";
-// import QRCode from "qrcode";
-
-// // Resolve __dirname in ES modules
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-
-// // Function to generate the PDF with a QR code
-// export const generatePdfWithQr = async (req, res) => {
-//     const { data } = req.body;
-
-//     const tempDir = path.join(__dirname, '../../public/temp');
-//     const pdfPath = path.join(tempDir, 'output.pdf');
-//     const qrPath = path.join(tempDir, 'qr.png');
-
-//     try {
-//         // Ensure the temp directory exists
-//         if (!fs.existsSync(tempDir)) {
-//             fs.mkdirSync(tempDir, { recursive: true });
-//         }
-
-//         // Generate QR Code
-//         await QRCode.toFile(qrPath, data);
-
-//         // Generate PDF
-//         const doc = new PDFDocument();
-//         doc.pipe(fs.createWriteStream(pdfPath));
-
-//         doc.text('Generated PDF with QR Code', { align: 'center' });
-//         doc.text(`Data: ${data}`, { align: 'center' });
-//         doc.image(qrPath, { fit: [150, 150], align: 'center' });
-
-//         doc.end();
-
-//         // Clean up the QR code file after PDF generation
-//         doc.on('finish', () => {
-//             fs.unlinkSync(qrPath); // Delete the temporary QR code
-//         });
-
-//         res.status(200).json({ message: "PDF with QR code generated successfully", path: pdfPath });
-//     } catch (err) {
-//         res.status(500).json({ message: "Failed to generate PDF", error: err.message });
-//     }
-// };
-
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
+import { uploadOnCloudinary } from "../utils/cloudinary.util.js";
+import { ApiError } from "../utils/APiError.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
 
 // Resolve __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -117,8 +72,29 @@ export const generatePdfWithQr = async (req, res) => {
             fs.unlinkSync(qrPath); // Delete the temporary QR code
         });
 
-        res.status(200).json({ message: "PDF with QR code generated successfully", path: pdfPath });
+        const instance = await uploadOnCloudinary(pdfPath);
+        if(!instance.url){
+            throw new ApiError(500, "something went wrong while uploading on cludinary")
+        }
+        res
+        .status(200)
+        .json(
+            new ApiResponse(200, instance.url, 'conversion done')
+        )
+
+        // Send the PDF file as a download
+        // res.download(outputPath, 'output.pdf', (err) => {
+        //     if (err) {
+        //         console.error("Failed to download PDF:", err);
+        //         return res.status(500).json({ message: "Failed to download PDF", error: err.message });
+        //     }
+
+        //     // Optionally, you can also delete the PDF file after download
+        //     fs.unlinkSync(pdfPath);
+        // });
+
     } catch (err) {
+        console.error("Error generating PDF:", err);
         res.status(500).json({ message: "Failed to generate PDF", error: err.message });
     }
 };
