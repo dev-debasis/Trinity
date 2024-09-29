@@ -6,36 +6,23 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 
 const registerUser = asyncHandler(async (req, res) => {
-  /*
-    steps for user registration: 
-    1. Taking user details from frontend as per user data model
-    2. validation the data
-    3. check if the user is already exist or not
-    4. check for images as per data model(avatar, coverImage)
-    5. upload on cloudinary
-    6. Create user object and entry in the db
-    7. Remove password and refresh token from response that will be sent to user
-    8. Check for user creation 
-    9. Return response
-    */
 
   // Taking user details from frontend through postman
-  const { username, email, fullName, password } = req.body;
+  const {  username,email, fullName, password } = req.body;
 
   // Validating the user given fields if any field is empty or not?
   if (
-    [fullName, email, username, password].some((field) => field?.trim() === "")
+    [fullName, email,username, password].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required");
   }
 
   // checking if the user is already exist or not
-  const isUserExit = await User.findOne({
-    $or: [{ username }, { email }],
-  });
+  const isUserExit=await User.findOne({email:email})
+  console.log(isUserExit)
 
   if (isUserExit) {
-    throw new ApiError(409, "Email or username already exist");
+    throw new ApiError(409, "Email  already exist");
   }
 
   // Check for the images as per data model
@@ -74,7 +61,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Returning the response
 
-  return res.json(
+  return res
+  .json(
     new ApiResponse(200, createdUser, "User Registered Successfully")
   );
 });
