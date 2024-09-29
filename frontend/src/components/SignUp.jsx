@@ -23,11 +23,8 @@ const SignUp = () => {
         setAvatar(e.target.files[0]); // Use e.target.files[0] for the file input
     };
 
+    // navigation function to navigate user to different page
     let navigate = useNavigate();
-
-    const routeChange = () => {
-        navigate('/');
-    };
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -53,7 +50,6 @@ const SignUp = () => {
 
     const handleSignup = async (e) => {
         e.preventDefault()
-        console.log("hello")
         const formData = new FormData();
         formData.append("fullName", Name);
         formData.append("username", userName);
@@ -61,16 +57,36 @@ const SignUp = () => {
         formData.append("password", password);
         formData.append("avatar", avatar); // 'avatar' should be the file object
 
-        const res = await fetch("http://localhost:5000/api/v1/users/register", {
-            method: "POST",
-            body: formData,
-            credentials: "include",
-        });
-
-        if (res.ok) {
-            const response = await res.json();
-            console.log(response);
-            routeChange();
+        try {
+            const res = await fetch("http://localhost:5000/api/v1/users/register", {
+                method: "POST",
+                body: formData,
+                credentials: "include",
+            });
+    
+            if (res.ok) {
+                // Login user if the user has singned up.
+                const Loginres = await fetch("http://localhost:5000/api/v1/users/login", {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    }),
+                });
+                
+                // If every thing is ok navigate user to '/'
+                if(Loginres.ok) {
+                    const LoginResponse = await Loginres.json();
+                    navigate('/', {state:{user: LoginResponse.user}});
+                }
+            }
+        } catch (error) {
+            console.log("Something went wrong while singnin user");
         }
     };
 
