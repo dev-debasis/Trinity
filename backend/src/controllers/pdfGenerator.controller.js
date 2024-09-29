@@ -96,6 +96,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
+import { uploadOnCloudinary } from "../utils/cloudinary.util.js";
+import { ApiError } from "../utils/APiError.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
 
 // Resolve __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -158,25 +161,20 @@ export const generatePdfWithQr = async (req, res) => {
         // End the PDF document
         doc.end();
 
-        // Ensure the PDF has fully finished writing before download
-        pdfWriteStream.on('finish', () => {
-            // Send the PDF file as a download
-            res.download(pdfPath, 'output.pdf', (err) => {
-                if (err) {
-                    console.error("Failed to download PDF:", err);
-                    return res.status(500).json({ message: "Failed to download PDF", error: err.message });
-                }
-
-                // Delete the PDF and QR code files after successful download
-                fs.unlinkSync(pdfPath);
-                fs.unlinkSync(qrPath);
-            });
+        // Clean up the QR code file after PDF generation
+        doc.on('finish', () => {
+            fs.unlinkSync(qrPath); // Delete the temporary QR code
         });
 
-        // Handle file writing errors
-        pdfWriteStream.on('error', (err) => {
-            console.error("Error writing PDF file:", err);
-            res.status(500).json({ message: "Failed to write PDF", error: err.message });
+        // Send the PDF file as a download
+        res.download(pdfPath, 'output.pdf', (err) => {
+            if (err) {
+                console.error("Failed to download PDF:", err);
+                return res.status(500).json({ message: "Failed to download PDF", error: err.message });
+            }
+
+            // Optionally, you can also delete the PDF file after download
+            fs.unlinkSync(pdfPath);
         });
 
     } catch (err) {

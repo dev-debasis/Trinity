@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 
 const ScreenShotTaker = () => {
-  const [inputUrl, setinputUrl] = useState("https://github.com/aman-prasad1");
+  const [inputUrl, setinputUrl] = useState("");
   const [width, setWidth] = useState(1280);
   const [height, setHeight] = useState(1024);
   const [isFullSize, setIsFullSize] = useState(false);
@@ -10,7 +10,44 @@ const ScreenShotTaker = () => {
   const toggleSwitch = () => {
     setIsFullSize(!isFullSize);
   };
+  
+  const handleSubmit = async () => {
+    await fetch("http://localhost:5000/api/v1/screenshot", {
+      method: "POST",
+      body: JSON.stringify({
+        url: inputUrl,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }).then((response) => {
+      if (response.ok) {
+        return response.blob();
+      } else {
+        console.error('Failed to download file');
+        throw new Error('Failed to download file');
+      }
+    }).then((blob) => {
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', 'screenshot.png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }).catch((error) => {
+      console.error('Error downloading file:', error);
+    });
+  }
 
+  const handleDownload = (fileURL) => {
+    const link = document.createElement("a");
+    link.href = fileURL;
+    link.setAttribute("download", "file.pdf");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   
   return (
     <div>
@@ -29,6 +66,7 @@ const ScreenShotTaker = () => {
             <input
               type="text"
               value={inputUrl}
+              placeholder="i.e: https://github.com/aman-prasad1"
               className="w-full border bg-[#0C162D] rounded-md p-2 mb-4"
               onChange={(e) => {
                 setinputUrl(e.target.value);
@@ -99,10 +137,10 @@ const ScreenShotTaker = () => {
               </div>
             </div>
 
-            <button className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
-              Capture screenshot
+            <button onClick={handleSubmit} className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
+              Download screenshot
             </button>
-          </div>
+            </div>
         </div>
       </div>
     </div>

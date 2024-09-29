@@ -1,7 +1,39 @@
-import React, { useState } from 'react'
-import Navbar from './Navbar';
+import React, { useState } from "react";
+import Navbar from "./Navbar";
+
 const PDFgenerator = () => {
-  const [data, setdata] = useState("")
+  const [data, setData] = useState("https://www.google.com");
+  const [URL, setURL] = useState(""); 
+
+  const handleSubmit = async (e) => {
+    console.log(data)
+    const response=await fetch("http://localhost:5000/api/v1/generate-pdf",{
+      method:"POST",
+      body:JSON.stringify({data:data}),
+      headers:{"Content-Type":"application/json"},
+      credentials:"include"
+    })
+    if(response.ok){
+      const blob=await response.blob();
+      const url=window.URL.createObjectURL(blob)
+      const link=document.createElement('a')
+      link.href=url
+      link.setAttribute("download","output.pdf")
+      link.click()
+    }else{
+      console.log("Failed")
+    }  
+  };
+
+  const handleDownload = (fileURL) => {
+    const link = document.createElement("a");
+    link.href = fileURL;
+    link.setAttribute("download", "file.pdf");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div>
       <Navbar />
@@ -14,22 +46,27 @@ const PDFgenerator = () => {
             Comprehensive way to utilize your data
           </span>
         </div>
-        <div className="card-wrapper w-[700px] h-[400px] border border-[#202637d9]  text-slate-300 bg-[#0C162D] rounded-sm shadow-md ">
+        <div className="card-wrapper w-[700px] h-[400px] border border-[#202637d9] text-slate-300 bg-[#0C162D] rounded-sm shadow-md ">
           <div className="flex p-12 flex-col justify-center card-content">
-            <div className='h-full '>
-            <textarea value={data} placeholder='Enter you data here' onChange={(e) => {setdata(e.target.value)}} className='w-full max-h-full min-h-20 bg-[#0C162D] rounded-md p-2 mb-4  focus:outline-none border-2 border-[#202637d9]'>
-            </textarea>
+            <div className="h-full ">
+              <textarea
+                value={data}
+                placeholder="Enter your data here"
+                onChange={(e) => setData(e.target.value)}
+                className="w-full max-h-full min-h-20 bg-[#0C162D] rounded-md p-2 mb-4 focus:outline-none border-2 border-[#202637d9]"
+              ></textarea>
             </div>
-            
-            <button className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700">
-              Generate PDF
+            <button
+              onClick={handleSubmit}
+              className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
+            >
+              Download PDF
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-
-export default PDFgenerator
+export default PDFgenerator;

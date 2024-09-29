@@ -9,9 +9,9 @@ const Logo = () => {
     navigate(path);
   }
   return (
-    <div className="flex items-center ml-10">
-      <img src={logo} alt="Company Logo" className="h-7 w-auto" />
-      <span onClick={routeChange} className="text-white text-xl ml-4 font-bold text-[#8995a7d9] text-[1rem] cursor-pointer">HackOver</span>
+    <div onClick={routeChange} className="flex items-center ml-10 cursor-pointer">
+      <img src={logo} alt="Company Logo" className="h-7 w-auto " />
+      <span  className="text-white text-xl ml-4 font-bold text-[#8995a7d9] text-[1rem]">HackOver</span>
     </div>
   );
 };
