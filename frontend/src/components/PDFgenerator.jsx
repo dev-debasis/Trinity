@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 
 const PDFgenerator = () => {
-  const [data, setData] = useState("https://www.google.com");
+  const [data, setData] = useState("https://www.linkedin.com/in/debasis-khamari-/");
   const [URL, setURL] = useState(""); 
 
   const handleSubmit = async (e) => {
-    console.log(data)
     const response=await fetch("http://localhost:5000/api/v1/generate-pdf",{
       method:"POST",
       body:JSON.stringify({data:data}),

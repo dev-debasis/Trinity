@@ -21,12 +21,9 @@ const isValidUrl = (string) => {
 // Function to generate the PDF with a QR code
 export const generatePdfWithQr = async (req, res) => {
     const { data } = req.body;
-    console.log(req)
-
     const tempDir = path.join(__dirname, '../../public/temp');
     const pdfPath = path.join(tempDir, 'output.pdf');
     const qrPath = path.join(tempDir, 'qr.png');
-    console.log(req.body)
     try {
         // Ensure the temp directory exists
         if (!fs.existsSync(tempDir)) {

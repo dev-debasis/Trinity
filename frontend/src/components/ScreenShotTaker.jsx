@@ -66,7 +66,7 @@ const ScreenShotTaker = () => {
             <input
               type="text"
               value={inputUrl}
-              placeholder="i.e: https://github.com/aman-prasad1"
+              placeholder="i.e: https://www.linkedin.com/in/debasis-khamari-/"
               className="w-full border bg-[#0C162D] rounded-md p-2 mb-4"
               onChange={(e) => {
                 setinputUrl(e.target.value);
