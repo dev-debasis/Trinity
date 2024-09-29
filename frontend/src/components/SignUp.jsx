@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Components from './styles.js';
+import default_user_img from '../assets/images/user.jpg';
+import pencil from '../assets/images/pencil.png'
 
 const SignUp = () => {
-    const [signIn, toggle] = React.useState(true);
+    const [signIn, toggle] = useState(false);
     const [Name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [avatar, setAvatar] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(default_user_img);
     const [userName,setUserName] = useState("");
+
+    useEffect(() => {
+        const convertImg = async ()=> {
+            const response = await fetch(default_user_img);
+            const blob = await response.blob();
+            const img = new File([blob], "userImg", { type: blob.type }); 
+            setAvatar(img);
+        }
+        convertImg();
+    }, [])
+    
 
     const onNameChange = (e) => {
         setName(e.target.value);
@@ -20,7 +34,15 @@ const SignUp = () => {
         setPassword(e.target.value);
     };
     const onAvatarChange = (e) => {
-        setAvatar(e.target.files[0]); // Use e.target.files[0] for the file input
+        const file = e.target.files[0];
+        setAvatar(file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAvatarPreview(reader.result);
+            };
+            reader.readAsDataURL(file); 
+        }
     };
 
     // navigation function to navigate user to different page
@@ -44,7 +66,7 @@ const SignUp = () => {
         if (res.ok) {
             const response = await res.json();
             console.log(response);
-            routeChange();
+            navigate('/', {state:{user:res.user}});
         }
     };
 
@@ -96,11 +118,17 @@ const SignUp = () => {
                 <Components.SignUpContainer signin={signIn}>
                     <Components.Form>
                         <Components.Title>Create Account</Components.Title>
+                        <label onChange={onAvatarChange} htmlFor="fileInput" className='relative h-16 w-16 cursor-pointer'>
+                            <img src={avatarPreview} alt="userImage" className='h-full w-full rounded-full absolute top-0 left-0' />
+                            <div className='h-5 w-5 flex justify-center items-center bg-zinc-900 rounded-full -rotate-90 absolute top-11 left-11'>
+                                <img src={pencil} alt="Edit" className=' h-4 w-auto invert' />
+                            </div>
+                        </label>
+                        <Components.FileInput id='fileInput' type='file' onChange={onAvatarChange} />
                         <Components.Input onChange={onNameChange} type='text' placeholder='Name' />
                         <Components.Input onChange={(e)=>setUserName(e.target.value)} type='text' placeholder='Username' />
                         <Components.Input onChange={onEmailChange} type='email' placeholder='Email' />
                         <Components.Input onChange={onPasswordChange} type='password' placeholder='Password' />
-                        <Components.FileInput type='file' onChange={onAvatarChange} />
                         <Components.Button onClick={handleSignup}>Sign Up</Components.Button>
                     </Components.Form>
                 </Components.SignUpContainer>
