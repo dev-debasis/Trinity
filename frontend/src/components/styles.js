@@ -8,7 +8,7 @@ import styled from 'styled-components';
  overflow: hidden;
  width: 678px;
  max-width: 100%;
- min-height: 400px;
+ min-height: 450px;
  `;
 
  
@@ -66,8 +66,8 @@ import styled from 'styled-components';
  `;
  
  export const FileInput = styled.input`
-
- border-radius: 50%
+  display: none;
+ border-radius: 50%;
  background-color: #eee;
  border: none;
  padding: 12px 15px;
