@@ -199,6 +199,6 @@ We welcome contributions! Feel free to raise issues or create pull requests.
 ---
 
 ## Contact
-For any issues, feel free to contact us at: [debasiskhamari7@gmail.com](mailto:your-email@example.com) | [debasiskhamari7@gmail.com](mailto:your-email@example.com)
+For any issues, feel free to contact us at: [debasiskhamari7@gmail.com](mailto:your-email@example.com) | [amanprasad048@gmail.com](mailto:your-email@example.com)
 
 ---
